@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dropix</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: white;
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #9b4dff,
+            transparent 45%
+        ),
+        linear-gradient(
+            180deg,
+            #40136b,
+            #180629
+        );
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+
+    opacity: .65;
+
+    background-image:
+        radial-gradient(circle, #dcaaff 1px, transparent 2px),
+        radial-gradient(circle, #9b5cff 1px, transparent 2px);
+
+    background-size:
+        75px 75px,
+        110px 110px;
+
+    z-index: -1;
+}
+
+.container {
+    max-width: 520px;
+    margin: auto;
+    padding: 18px 16px 100px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 1000;
+    letter-spacing: 3px;
+}
+
+.logo span {
+    color: #d08aff;
+}
+
+.profile-button {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    border: 2px solid #c274ff;
+
+    background: #702cff;
+    color: white;
+
+    overflow: hidden;
+    font-size: 20px;
+    padding: 0;
+}
+
+.profile-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* =========================
+   BALANCE
+========================= */
+
+.balance {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(73,24,112,.95),
+            rgba(30,10,52,.95)
+        );
+
+    border: 1px solid #a75be0;
+    border-radius: 22px;
+
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.balance-title {
+    color: #cbb7d8;
+    font-size: 13px;
+}
+
+.stars {
+    font-size: 28px;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+
+/* =========================
+   CASES
+========================= */
+
+.section-title {
+    font-size: 23px;
+    font-weight: 900;
+    margin-bottom: 15px;
+}
+
+.cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.case {
+    min-height: 245px;
+    padding: 15px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(62,24,91,.96),
+            rgba(27,10,46,.98)
+        );
+
+    border: 1px solid #a75be0;
+    border-radius: 22px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.3),
+        inset 0 0 20px rgba(173,73,255,.1);
+}
+
+
+/* =========================
+   CHESTS
+========================= */
+
+.chest {
+    position: relative;
+
+    width: 110px;
+    height: 105px;
+
+    margin: 5px auto 15px;
+
+    filter:
+        drop-shadow(
+            0 10px 12px rgba(0,0,0,.5)
+        );
+}
+
+.chest-body {
+    position: absolute;
+
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+    height: 58px;
+
+    border-radius: 8px 8px 12px 12px;
+
+    border: 3px solid rgba(0,0,0,.3);
+}
+
+.chest-lid {
+    position: absolute;
+
+    left: 5px;
+    right: 5px;
+    top: 18px;
+
+    height: 38px;
+
+    border-radius: 13px 13px 5px 5px;
+
+    border: 3px solid rgba(0,0,0,.3);
+}
+
+.chest-lock {
+    position: absolute;
+
+    width: 18px;
+    height: 23px;
+
+    left: 50%;
+    top: 42px;
+
+    transform: translateX(-50%);
+
+    border-radius: 4px;
+
+    z-index: 5;
+}
+
+
+/* WOOD */
+
+.chest-wood .chest-body {
+    background:
+        linear-gradient(
+            90deg,
+            #633014,
+            #b66125,
+            #713412
+        );
+}
+
+.chest-wood .chest-lid {
+    background:
+        linear-gradient(
+            #d47a36,
+            #773613
+        );
+}
+
+.chest-wood .chest-lock {
+    background: #e7b64d;
+}
+
+
+/* PURPLE */
+
+.chest-purple .chest-body {
+    background:
+        linear-gradient(
+            90deg,
+            #35106d,
+            #8b32d5,
+            #42147d
+        );
+}
+
+.chest-purple .chest-lid {
+    background:
+        linear-gradient(
+            #b64dff,
+            #531798
+        );
+}
+
+.chest-purple .chest-lock {
+    background: #e3b9ff;
+
+    box-shadow:
+        0 0 15px #b95cff;
+}
+
+
+/* DIAMOND */
+
+.chest-diamond .chest-body {
+    background:
+        linear-gradient(
+            90deg,
+            #0a4261,
+            #16a9d3,
+            #126486
+        );
+}
+
+.chest-diamond .chest-lid {
+    background:
+        linear-gradient(
+            #68eaff,
+            #158bb7
+        );
+}
+
+.chest-diamond .chest-lock {
+    background: #d9fbff;
+
+    box-shadow:
+        0 0 18px #4be5ff;
+}
+
+
+/* ROYAL */
+
+.chest-royal .chest-body {
+    background:
+        linear-gradient(
+            90deg,
+            #684000,
+            #d49712,
+            #805200
+        );
+}
+
+.chest-royal .chest-lid {
+    background:
+        linear-gradient(
+            #ffe16a,
+            #c78608
+        );
+}
+
+.chest-royal .chest-lock {
+    background: #fff2a5;
+
+    box-shadow:
+        0 0 20px #ffc928;
+}
+
+
+/* =========================
+   CASE TEXT
+========================= */
+
+.case-name {
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.case-reward {
+    color: #bda8c8;
+    font-size: 11px;
+
+    min-height: 34px;
+
+    margin: 6px 0;
+}
+
+.case button,
+.admin-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #843cff,
+            #b84cff
+        );
+
+    color: white;
+
+    font-weight: 900;
+}
+
+.case button:active,
+.admin-button:active {
+    transform: scale(.97);
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+.history {
+    margin-top: 28px;
+}
+
+.history-title {
+    font-size: 19px;
+    font-weight: 900;
+
+    margin-bottom: 10px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 12px;
+    margin-bottom: 8px;
+
+    background:
+        rgba(35,15,54,.85);
+
+    border:
+        1px solid #653a7d;
+
+    border-radius: 13px;
+}
+
+.history-item span:last-child {
+    color: #ce8cff;
+    font-weight: 900;
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-screen {
+    display: none;
+
+    animation:
+        profileIn .25s ease;
+}
+
+@keyframes profileIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+.profile-back {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+
+    border:
+        1px solid #754493;
+
+    border-radius: 13px;
+
+    background:
+        rgba(42,17,61,.9);
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.profile-card {
+    position: relative;
+
+    text-align: center;
+
+    padding: 28px 20px 24px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(91,35,132,.95),
+            rgba(29,9,48,.98)
+        );
+
+    border:
+        1px solid #b76cff;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35),
+        inset 0 0 35px rgba(188,82,255,.12);
+}
+
+.profile-avatar {
+    width: 92px;
+    height: 92px;
+
+    margin: 0 auto 13px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #9c42ff,
+            #5b20c9
+        );
+
+    border:
+        3px solid #d28aff;
+
+    box-shadow:
+        0 0 25px rgba(181,83,255,.55);
+
+    overflow: hidden;
+
+    font-size: 38px;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 900;
+
+    margin-top: 5px;
+}
+
+.profile-username {
+    margin-top: 5px;
+
+    color: #d19cff;
+
+    font-size: 14px;
+}
+
+.profile-id {
+    margin-top: 8px;
+
+    color: #9f8ba9;
+
+    font-size: 11px;
+}
+
+.profile-balance-card {
+    margin-top: 15px;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7027b1,
+            #371052
+        );
+
+    border:
+        1px solid #a957df;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25);
+}
+
+.profile-balance-title {
+    color: #d6c0df;
+    font-size: 13px;
+}
+
+.profile-balance {
+    margin-top: 5px;
+
+    font-size: 30px;
+    font-weight: 900;
+
+    color: #fff;
+}
+
+.profile-stats {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-top: 15px;
+}
+
+.stat-card {
+    padding: 18px 10px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    background:
+        rgba(40,14,59,.95);
+
+    border:
+        1px solid #693b80;
+}
+
+.stat-icon {
+    font-size: 27px;
+}
+
+.stat-value {
+    margin-top: 6px;
+
+    font-size: 22px;
+    font-weight: 900;
+
+    color: #d28aff;
+}
+
+.stat-title {
+    margin-top: 3px;
+
+    color: #9f8ca8;
+
+    font-size: 11px;
+}
+
+.profile-history {
+    margin-top: 18px;
+}
+
+.profile-history-title {
+    margin-bottom: 10px;
+
+    font-size: 18px;
+    font-weight: 900;
+}
+
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-screen {
+    display: none;
+}
+
+.admin-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(67,24,95,.96),
+            rgba(27,10,46,.98)
+        );
+
+    border:
+        1px solid #b76cff;
+
+    border-radius: 22px;
+
+    padding: 20px;
+}
+
+.admin-title {
+    font-size: 25px;
+    font-weight: 900;
+
+    margin-bottom: 20px;
+}
+
+.admin-input {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid #754493;
+
+    background:
+        #190d26;
+
+    color: white;
+
+    font-size: 15px;
+}
+
+.admin-button {
+    margin-top: 8px;
+}
+
+.admin-danger {
+    background:
+        linear-gradient(
+            135deg,
+            #8d245b,
+            #d02e64
+        );
+}
+
+.admin-info {
+    margin-top: 18px;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    background:
+        #170b23;
+
+    color:
+        #cdbbd5;
+
+    line-height: 1.6;
+}
+
+.admin-open {
+    margin-top: 20px;
+
+    display: none;
+}
+
+.back {
+    margin-bottom: 20px;
+
+    padding: 10px 14px;
+
+    border:
+        1px solid #754493;
+
+    border-radius: 12px;
+
+    background:
+        #291238;
+
+    color: white;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 70px;
+
+    background:
+        rgba(22,7,35,.96);
+
+    border-top:
+        1px solid #633a79;
+
+    display: flex;
+
+    justify-content:
+        center;
+}
+
+.nav-inner {
+    width: 100%;
+    max-width: 520px;
+
+    display: flex;
+
+    justify-content:
+        space-around;
+
+    align-items:
+        center;
+}
+
+.nav button {
+    background: none;
+    border: 0;
+
+    color: #95849c;
+
+    font-size: 11px;
+}
+
+.nav button div {
+    font-size: 23px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- =========================
+     HOME
+========================= -->
+
+<div id="home">
+
+    <div class="header">
+
+        <div class="logo">
+            DROP<span>IX</span>
+        </div>
+
+        <button
+            class="profile-button"
+            onclick="openProfile()"
+            id="profileButton"
+        >
+            👤
+        </button>
+
+    </div>
+
+
+    <div class="balance">
+
+        <div class="balance-title">
+            Виртуальный баланс
+        </div>
+
+        <div
+            class="stars"
+            id="balance"
+        >
+            ⭐ 0
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        🎁 Кейсы
+    </div>
+
+
+    <div class="cases">
+
+
+        <!-- FREE CASE -->
+
+        <div class="case">
+
+            <div class="chest chest-wood">
+
+                <div class="chest-lid"></div>
+                <div class="chest-body"></div>
+                <div class="chest-lock"></div>
+
+            </div>
+
+            <div class="case-name">
+                Free Case
+            </div>
+
+            <div class="case-reward">
+                Бесплатно • 1–5 ⭐
+            </div>
+
+            <button
+                onclick="openCase(1,5,0,'Free Case')"
+            >
+                БЕСПЛАТНО
+            </button>
+
+        </div>
+
+
+        <!-- PURPLE CASE -->
+
+        <div class="case">
+
+            <div class="chest chest-purple">
+
+                <div class="chest-lid"></div>
+                <div class="chest-body"></div>
+                <div class="chest-lock"></div>
+
+            </div>
+
+            <div class="case-name">
+                Purple Case
+            </div>
+
+            <div class="case-reward">
+                25 ⭐ • 10–40 ⭐
+            </div>
+
+            <button
+                onclick="openCase(10,40,25,'Purple Case')"
+            >
+                25 ⭐
+            </button>
+
+        </div>
+
+
+        <!-- DIAMOND CASE -->
+
+        <div class="case">
+
+            <div class="chest chest-diamond">
+
+                <div class="chest-lid"></div>
+                <div class="chest-body"></div>
+                <div class="chest-lock"></div>
+
+            </div>
+
+            <div class="case-name">
+                Diamond Case
+            </div>
+
+            <div class="case-reward">
+                100 ⭐ • 50–150 ⭐
+            </div>
+
+            <button
+                onclick="openCase(50,150,100,'Diamond Case')"
+            >
+                100 ⭐
+            </button>
+
+        </div>
+
+
+        <!-- ROYAL CASE -->
+
+        <div class="case">
+
+            <div class="chest chest-royal">
+
+                <div class="chest-lid"></div>
+                <div class="chest-body"></div>
+                <div class="chest-lock"></div>
+
+            </div>
+
+            <div class="case-name">
+                Royal Case
+            </div>
+
+            <div class="case-reward">
+                250 ⭐ • 200–300 ⭐
+            </div>
+
+            <button
+                onclick="openCase(200,300,250,'Royal Case')"
+            >
+                250 ⭐
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY -->
+
+    <div class="history">
+
+        <div class="history-title">
+            📜 История
+        </div>
+
+        <div id="historyList">
+            Пока открытий нет
+        </div>
+
+    </div>
+
+
+    <!-- ADMIN BUTTON -->
+
+    <button
+        class="admin-button admin-open"
+        id="adminOpen"
+        onclick="openAdmin()"
+    >
+        ⚙️ Админ-панель
+    </button>
+
+</div>
+
+
+
+<!-- =========================
+     PROFILE
+========================= -->
+
+<div
+    id="profileScreen"
+    class="profile-screen"
+>
+
+    <button
+        class="profile-back"
+        onclick="closeProfile()"
+    >
+        ← Назад
+    </button>
+
+
+    <div class="profile-card">
+
+        <div
+            class="profile-avatar"
+            id="profileAvatar"
+        >
+            👤
+        </div>
+
+
+        <div
+            class="profile-name"
+            id="profileName"
+        >
+            Пользователь
+        </div>
+
+
+        <div
+            class="profile-username"
+            id="profileUsername"
+        >
+            @username
+        </div>
+
+
+        <div
+            class="profile-id"
+            id="profileId"
+        >
+            ID: —
+        </div>
+
+    </div>
+
+
+    <div class="profile-balance-card">
+
+        <div class="profile-balance-title">
+            ⭐ Твой баланс
+        </div>
+
+        <div
+            class="profile-balance"
+            id="profileBalance"
+        >
+            ⭐ 0
+        </div>
+
+    </div>
+
+
+    <div class="profile-stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎁
+            </div>
+
+            <div
+                class="stat-value"
+                id="casesOpened"
+            >
+                0
+            </div>
+
+            <div class="stat-title">
+                Кейсов открыто
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <div
+                class="stat-value"
+                id="starsWon"
+            >
+                0
+            </div>
+
+            <div class="stat-title">
+                Получено ⭐
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-history">
+
+        <div class="profile-history-title">
+            📜 Последние открытия
+        </div>
+
+        <div id="profileHistory">
+            Пока открытий нет
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     ADMIN PANEL
+========================= -->
+
+<div
+    id="adminScreen"
+    class="admin-screen"
+>
+
+    <button
+        class="back"
+        onclick="closeAdmin()"
+    >
+        ← Назад
+    </button>
+
+
+    <div class="admin-card">
+
+        <div class="admin-title">
+            ⚙️ Админ-панель
+        </div>
+
+
+        <div>
+            ⭐ Управление балансом
+        </div>
+
+
+        <input
+            id="adminAmount"
+            class="admin-input"
+            type="number"
+            placeholder="Количество звёзд"
+        >
+
+
+        <button
+            class="admin-button"
+            onclick="giveStars()"
+        >
+            ➕ Выдать ⭐
+        </button>
+
+
+        <button
+            class="admin-button admin-danger"
+            onclick="takeStars()"
+        >
+            ➖ Забрать ⭐
+        </button>
+
+
+        <div
+            class="admin-info"
+            id="adminInfo"
+        ></div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+<!-- =========================
+     BOTTOM NAV
+========================= -->
+
+<div class="nav">
+
+    <div class="nav-inner">
+
+
+        <button onclick="goHome()">
+
+            <div>
+                🏠
+            </div>
+
+            Главная
+
+        </button>
+
+
+        <button onclick="goHome()">
+
+            <div>
+                🎁
+            </div>
+
+            Кейсы
+
+        </button>
+
+
+        <button onclick="openProfile()">
+
+            <div>
+                👤
+            </div>
+
+            Профиль
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================
+   TELEGRAM
+========================= */
+
+const tg =
+    window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+
+/* =========================
+   ADMIN ID
+========================= */
+
+const ADMIN_ID = 8707463948;
+
+
+/* =========================
+   TELEGRAM USER
+========================= */
+
+const user =
+    tg.initDataUnsafe &&
+    tg.initDataUnsafe.user
+        ? tg.initDataUnsafe.user
+        : null;
+
+
+/* =========================
+   BALANCE
+========================= */
+
+let balance =
+    Number(
+        localStorage.getItem(
+            "dropix_balance"
+        )
+    ) || 0;
+
+
+/* =========================
+   HISTORY
+========================= */
+
+let history =
+    JSON.parse(
+        localStorage.getItem(
+            "dropix_history"
+        ) || "[]"
+    );
+
+
+/* =========================
+   SAVE
+========================= */
+
+function save() {
+
+    localStorage.setItem(
+        "dropix_balance",
+        balance
+    );
+
+    localStorage.setItem(
+        "dropix_history",
+        JSON.stringify(history)
+    );
+
+}
+
+
+/* =========================
+   UPDATE BALANCE
+========================= */
+
+function updateBalance() {
+
+    document.getElementById(
+        "balance"
+    ).innerText =
+        "⭐ " + balance;
+
+}
+
+
+/* =========================
+   OPEN CASE
+========================= */
+
+function openCase(
+    min,
+    max,
+    price,
+    name
+) {
+
+    if (balance < price) {
+
+        alert(
+            "❌ Недостаточно ⭐"
+        );
+
+        return;
+
+    }
+
+
+    balance -= price;
+
+
+    const reward =
+        Math.floor(
+            Math.random() *
+            (max - min + 1)
+        ) + min;
+
+
+    balance += reward;
+
+
+    history.unshift({
+
+        case: name,
+
+        reward: reward
+
+    });
+
+
+    history =
+        history.slice(0, 30);
+
+
+    save();
+
+    updateBalance();
+
+    showHistory();
+
+
+    alert(
+        "🎉 Ты выиграл " +
+        reward +
+        " ⭐!"
+    );
+
+}
+
+
+/* =========================
+   SHOW HISTORY
+========================= */
+
+function showHistory() {
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    if (history.length === 0) {
+
+        list.innerHTML =
+            "Пока открытий нет";
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    history.forEach(
+        item => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "history-item";
+
+
+            div.innerHTML =
+                "<span>" +
+                item.case +
+                "</span>" +
+
+                "<span>+" +
+                item.reward +
+                " ⭐</span>";
+
+
+            list.appendChild(div);
+
+        }
+    );
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome() {
+
+    document.getElementById(
+        "home"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "adminScreen"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "profileScreen"
+    ).style.display =
+        "none";
+
+
+    updateBalance();
+
+}
+
+
+/* =========================
+   ADMIN CHECK
+========================= */
+
+function isAdmin() {
+
+    return (
+
+        user &&
+
+        Number(user.id) ===
+        Number(ADMIN_ID)
+
+    );
+
+}
+
+
+/* =========================
+   ADMIN BUTTON
+========================= */
+
+function setupAdmin() {
+
+    const button =
+        document.getElementById(
+            "adminOpen"
+        );
+
+
+    if (isAdmin()) {
+
+        button.style.display =
+            "block";
+
+    } else {
+
+        button.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================
+   OPEN ADMIN
+========================= */
+
+function openAdmin() {
+
+    if (!isAdmin()) {
+
+        alert(
+            "⛔ Доступ запрещён"
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "home"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "profileScreen"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "adminScreen"
+    ).style.display =
+        "block";
+
+
+    updateAdminInfo();
+
+}
+
+
+/* =========================
+   CLOSE ADMIN
+========================= */
+
+function closeAdmin() {
+
+    goHome();
+
+}
+
+
+/* =========================
+   ADMIN INFO
+========================= */
+
+function updateAdminInfo() {
+
+    document.getElementById(
+        "adminInfo"
+    ).innerHTML =
+
+        "👤 Telegram ID: <b>" +
+
+        (
+            user
+                ? user.id
+                : "не определён"
+        ) +
+
+        "</b><br><br>" +
+
+        "⭐ Текущий баланс: <b>" +
+
+        balance +
+
+        "</b>";
+
+}
+
+
+/* =========================
+   GIVE STARS
+========================= */
+
+function giveStars() {
+
+    if (!isAdmin()) {
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "adminAmount"
+        );
+
+
+    const amount =
+        Number(input.value);
+
+
+    if (
+        !amount ||
+        amount <= 0
+    ) {
+
+        alert(
+            "Введите количество ⭐"
+        );
+
+        return;
+
+    }
+
+
+    balance += amount;
+
+
+    save();
+
+    updateBalance();
+
+    updateAdminInfo();
+
+
+    input.value = "";
+
+
+    alert(
+        "✅ Выдано " +
+        amount +
+        " ⭐"
+    );
+
+}
+
+
+/* =========================
+   TAKE STARS
+========================= */
+
+function takeStars() {
+
+    if (!isAdmin()) {
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "adminAmount"
+        );
+
+
+    const amount =
+        Number(input.value);
+
+
+    if (
+        !amount ||
+        amount <= 0
+    ) {
+
+        alert(
+            "Введите количество ⭐"
+        );
+
+        return;
+
+    }
+
+
+    balance =
+        Math.max(
+            0,
+            balance - amount
+        );
+
+
+    save();
+
+    updateBalance();
+
+    updateAdminInfo();
+
+
+    input.value = "";
+
+
+    alert(
+        "✅ Забрано " +
+        amount +
+        " ⭐"
+    );
+
+}
+
+
+/* =========================
+   OPEN PROFILE
+========================= */
+
+function openProfile() {
+
+    document.getElementById(
+        "home"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "adminScreen"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "profileScreen"
+    ).style.display =
+        "block";
+
+
+    /* NAME */
+
+    document.getElementById(
+        "profileName"
+    ).innerText =
+
+        user
+            ? (
+                user.first_name ||
+                "Пользователь"
+            )
+            : "Пользователь";
+
+
+    /* USERNAME */
+
+    document.getElementById(
+        "profileUsername"
+    ).innerText =
+
+        user && user.username
+            ? "@" + user.username
+            : "Username не указан";
+
+
+    /* ID */
+
+    document.getElementById(
+        "profileId"
+    ).innerText =
+
+        user
+            ? "ID: " + user.id
+            : "ID: —";
+
+
+    /* BALANCE */
+
+    document.getElementById(
+        "profileBalance"
+    ).innerText =
+        "⭐ " + balance;
+
+
+    /* CASES */
+
+    document.getElementById(
+        "casesOpened"
+    ).innerText =
+        history.length;
+
+
+    /* TOTAL WON */
+
+    const totalWon =
+        history.reduce(
+            (sum, item) =>
+                sum +
+                Number(
+                    item.reward || 0
+                ),
+            0
+        );
+
+
+    document.getElementById(
+        "starsWon"
+    ).innerText =
+        totalWon;
+
+
+    /* HISTORY */
+
+    const profileHistory =
+        document.getElementById(
+            "profileHistory"
+        );
+
+
+    if (history.length === 0) {
+
+        profileHistory.innerHTML =
+            '<div class="history-item">' +
+            '<span>Пока открытий нет</span>' +
+            '</div>';
+
+    } else {
+
+        profileHistory.innerHTML =
+            "";
+
+
+        history
+            .slice(0, 5)
+            .forEach(
+                item => {
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "history-item";
+
+
+                    div.innerHTML =
+                        "<span>" +
+                        item.case +
+                        "</span>" +
+
+                        "<span>+" +
+                        item.reward +
+                        " ⭐</span>";
+
+
+                    profileHistory.appendChild(
+                        div
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* AVATAR */
+
+    const avatar =
+        document.getElementById(
+            "profileAvatar"
+        );
+
+
+    if (
+        user &&
+        user.photo_url
+    ) {
+
+        avatar.innerHTML =
+            '<img src="' +
+            user.photo_url +
+            '" alt="Avatar">';
+
+    } else {
+
+        avatar.innerHTML =
+            "👤";
+
+    }
+
+}
+
+
+/* =========================
+   CLOSE PROFILE
+========================= */
+
+function closeProfile() {
+
+    document.getElementById(
+        "profileScreen"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "home"
+    ).style.display =
+        "block";
+
+
+    updateBalance();
+
+}
+
+
+/* =========================
+   TOP AVATAR
+========================= */
+
+function setupTopAvatar() {
+
+    const button =
+        document.getElementById(
+            "profileButton"
+        );
+
+
+    if (
+        user &&
+        user.photo_url
+    ) {
+
+        button.innerHTML =
+            '<img src="' +
+            user.photo_url +
+            '" alt="Avatar">';
+
+    }
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+updateBalance();
+
+showHistory();
+
+setupAdmin();
+
+setupTopAvatar();
+
+</script>
+
+</body>
+</html>
