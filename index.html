@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Dropix</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #6028b5 0%,
+            transparent 38%
+        ),
+        #08080c;
+
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 18px;
+    padding-bottom: 95px;
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 29px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #a15cff;
+}
+
+.profile-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #8b45ff;
+    background: linear-gradient(
+        135deg,
+        #8c48ff,
+        #d34cff
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.profile-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* BALANCE */
+
+.balance {
+    background:
+        linear-gradient(
+            135deg,
+            #17121f,
+            #241631
+        );
+
+    border: 1px solid #352344;
+    border-radius: 18px;
+
+    padding: 17px;
+    margin-bottom: 25px;
+}
+
+.balance-title {
+    color: #999;
+    font-size: 13px;
+}
+
+.stars {
+    font-size: 25px;
+    font-weight: 900;
+    margin-top: 4px;
+}
+
+.virtual {
+    color: #8d7a9d;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* TITLES */
+
+.section-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+/* CASES */
+
+.cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.case {
+    background:
+        linear-gradient(
+            145deg,
+            #19151f,
+            #0f0e13
+        );
+
+    border: 1px solid #30243d;
+    border-radius: 20px;
+
+    padding: 16px;
+    text-align: center;
+}
+
+.case-icon {
+    font-size: 62px;
+    margin: 10px;
+}
+
+.case-name {
+    font-weight: 800;
+    font-size: 17px;
+}
+
+.case-reward {
+    color: #aaa;
+    font-size: 12px;
+
+    margin: 6px 0;
+    min-height: 30px;
+}
+
+.case button {
+    width: 100%;
+
+    border: 0;
+    border-radius: 11px;
+
+    padding: 11px;
+
+    background: #8b45ff;
+    color: white;
+
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.case button:active {
+    transform: scale(.97);
+}
+
+.case button:disabled {
+    background: #29242f;
+    color: #8c8791;
+}
+
+/* CASE SCREEN */
+
+.case-screen {
+    display: none;
+}
+
+.back {
+    background: none;
+    border: 0;
+
+    color: white;
+
+    font-size: 17px;
+
+    padding: 5px 0;
+    margin-bottom: 20px;
+}
+
+.big-case {
+    text-align: center;
+}
+
+.big-case-icon {
+    font-size: 95px;
+    margin: 15px;
+}
+
+.case-description {
+    color: #999;
+    font-size: 13px;
+}
+
+/* ROULETTE */
+
+.roulette {
+    display: none;
+
+    margin-top: 25px;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    border: 1px solid #342544;
+
+    background: #111017;
+
+    height: 125px;
+
+    position: relative;
+}
+
+.roulette-line {
+    display: flex;
+
+    align-items: center;
+
+    height: 100%;
+
+    gap: 12px;
+
+    position: absolute;
+
+    left: 0;
+
+    transition:
+        transform 3.5s
+        cubic-bezier(.12,.75,.18,1);
+}
+
+.item {
+    min-width: 105px;
+    height: 100px;
+
+    border-radius: 15px;
+
+    background: #1d1824;
+
+    border: 1px solid #3b2d48;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.item-icon {
+    font-size: 35px;
+}
+
+.item-value {
+    color: #b46cff;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    margin-top: 5px;
+}
+
+.pointer {
+    position: absolute;
+
+    left: 50%;
+
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background: #b35cff;
+
+    box-shadow:
+        0 0 18px #b35cff;
+
+    z-index: 3;
+}
+
+/* OPEN */
+
+.open-button {
+    width: 100%;
+
+    border: 0;
+
+    border-radius: 15px;
+
+    padding: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b45ff,
+            #b44cff
+        );
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    margin-top: 25px;
+}
+
+.open-button:disabled {
+    background: #29242f;
+    color: #8c8791;
+}
+
+/* RESULT */
+
+.result {
+    display: none;
+
+    text-align: center;
+
+    margin-top: 25px;
+}
+
+.result-icon {
+    font-size: 95px;
+
+    animation: pop .5s ease;
+}
+
+.result-title {
+    font-size: 25px;
+
+    font-weight: 900;
+
+    margin-top: 10px;
+}
+
+.result-value {
+    color: #b26aff;
+
+    font-size: 25px;
+
+    font-weight: 900;
+
+    margin-top: 8px;
+}
+
+@keyframes pop {
+
+    0% {
+        transform: scale(.3);
+        opacity: 0;
+    }
+
+    80% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* HISTORY */
+
+.history {
+    margin-top: 25px;
+}
+
+.history-title {
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin-bottom: 10px;
+}
+
+.history-item {
+    background: #15131a;
+
+    border: 1px solid #29232f;
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+    margin-bottom: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.history-item span:last-child {
+    color: #a95cff;
+
+    font-weight: bold;
+}
+
+/* PROFILE */
+
+.profile-screen {
+    display: none;
+}
+
+.profile-card {
+    background:
+        linear-gradient(
+            145deg,
+            #19151f,
+            #0f0e13
+        );
+
+    border: 1px solid #30243d;
+
+    border-radius: 22px;
+
+    padding: 25px 18px;
+
+    text-align: center;
+
+    margin-bottom: 18px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+
+    margin: 0 auto 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b45ff,
+            #d34cff
+        );
+
+    border: 3px solid #9d5cff;
+
+    overflow: hidden;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 38px;
+
+    font-weight: 900;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.profile-username {
+    color: #9e8fa9;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* STATS */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.stat {
+    background: #15131a;
+
+    border: 1px solid #29232f;
+
+    border-radius: 16px;
+
+    padding: 16px;
+
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 27px;
+}
+
+.stat-value {
+    font-size: 22px;
+
+    font-weight: 900;
+
+    margin-top: 6px;
+}
+
+.stat-label {
+    color: #888;
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+/* CASE STATS */
+
+.stats-section {
+    background: #15131a;
+
+    border: 1px solid #29232f;
+
+    border-radius: 18px;
+
+    padding: 16px;
+
+    margin-bottom: 18px;
+}
+
+.stats-section-title {
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin-bottom: 14px;
+}
+
+.case-stat {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 11px 0;
+
+    border-bottom: 1px solid #27232c;
+}
+
+.case-stat:last-child {
+    border-bottom: 0;
+}
+
+.case-stat-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.case-stat-icon {
+    font-size: 25px;
+}
+
+.case-stat-name {
+    font-size: 14px;
+}
+
+.case-stat-count {
+    color: #b26aff;
+
+    font-weight: 800;
+}
+
+/* NAV */
+
+.nav {
+    position: fixed;
+
+    bottom: 0;
+
+    left: 0;
+    right: 0;
+
+    height: 70px;
+
+    background:
+        rgba(12,12,17,.96);
+
+    border-top:
+        1px solid #24222a;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+.nav-inner {
+    width: 100%;
+
+    max-width: 500px;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+}
+
+.nav button {
+    background: none;
+
+    border: 0;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+.nav button div {
+    font-size: 23px;
+
+    margin-bottom: 2px;
+}
+
+.nav .active {
+    color: #a15cff;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- HOME -->
+
+<div id="home">
+
+
+    <div class="header">
+
+        <div class="logo">
+            DROP<span>IX</span>
+        </div>
+
+
+        <button
+            class="profile-button"
+            onclick="openProfile()"
+            id="headerAvatar"
+        >
+            👤
+        </button>
+
+    </div>
+
+
+    <!-- BALANCE -->
+
+    <div class="balance">
+
+        <div class="balance-title">
+            Виртуальный баланс
+        </div>
+
+        <div
+            class="stars"
+            id="balance"
+        >
+            ⭐ 0
+        </div>
+
+        <div class="virtual">
+            Учебные игровые очки
+        </div>
+
+    </div>
+
+
+    <div class="section-title">
+        🎁 Кейсы
+    </div>
+
+
+    <div class="cases">
+
+
+        <!-- FREE -->
+
+        <div class="case">
+
+            <div class="case-icon">
+                🎁
+            </div>
+
+            <div class="case-name">
+                Free Case
+            </div>
+
+            <div class="case-reward">
+                Бесплатно • 1–5 ⭐
+            </div>
+
+            <button
+                id="freeCaseButton"
+                onclick="
+                selectCase(
+                    'Free Case',
+                    '🎁',
+                    1,
+                    5,
+                    0
+                )"
+            >
+                БЕСПЛАТНО
+            </button>
+
+        </div>
+
+
+        <!-- PURPLE -->
+
+        <div class="case">
+
+            <div class="case-icon">
+                💜
+            </div>
+
+            <div class="case-name">
+                Purple Case
+            </div>
+
+            <div class="case-reward">
+                Цена 25 ⭐ • 10–40 ⭐
+            </div>
+
+            <button
+                onclick="
+                selectCase(
+                    'Purple Case',
+                    '💜',
+                    10,
+                    40,
+                    25
+                )"
+            >
+                25 ⭐
+            </button>
+
+        </div>
+
+
+        <!-- DIAMOND -->
+
+        <div class="case">
+
+            <div class="case-icon">
+                💎
+            </div>
+
+            <div class="case-name">
+                Diamond Case
+            </div>
+
+            <div class="case-reward">
+                Цена 100 ⭐ • 50–150 ⭐
+            </div>
+
+            <button
+                onclick="
+                selectCase(
+                    'Diamond Case',
+                    '💎',
+                    50,
+                    150,
+                    100
+                )"
+            >
+                100 ⭐
+            </button>
+
+        </div>
+
+
+        <!-- ROYAL -->
+
+        <div class="case">
+
+            <div class="case-icon">
+                👑
+            </div>
+
+            <div class="case-name">
+                Royal Case
+            </div>
+
+            <div class="case-reward">
+                Цена 250 ⭐ • 200–300 ⭐
+            </div>
+
+            <button
+                onclick="
+                selectCase(
+                    'Royal Case',
+                    '👑',
+                    200,
+                    300,
+                    250
+                )"
+            >
+                250 ⭐
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY -->
+
+    <div class="history">
+
+        <div class="history-title">
+            📜 История
+        </div>
+
+        <div id="historyList">
+
+            <div
+                style="
+                color:#777;
+                font-size:13px;
+                "
+            >
+                Пока открытий нет
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- CASE SCREEN -->
+
+<div
+    id="caseScreen"
+    class="case-screen"
+>
+
+
+    <button
+        class="back"
+        onclick="goHome()"
+    >
+        ← Назад
+    </button>
+
+
+    <div class="big-case">
+
+
+        <div
+            class="big-case-icon"
+            id="bigIcon"
+        >
+            🎁
+        </div>
+
+
+        <h2 id="caseTitle">
+            Free Case
+        </h2>
+
+
+        <div
+            class="case-description"
+            id="caseDescription"
+        >
+            Бесплатно
+        </div>
+
+
+        <div
+            class="roulette"
+            id="roulette"
+        >
+
+            <div class="pointer"></div>
+
+            <div
+                class="roulette-line"
+                id="rouletteLine"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="result"
+            id="result"
+        >
+
+            <div class="result-icon">
+                🎉
+            </div>
+
+            <div class="result-title">
+                Поздравляем!
+            </div>
+
+            <div
+                class="result-value"
+                id="resultValue"
+            >
+                +0 ⭐
+            </div>
+
+        </div>
+
+
+        <button
+            class="open-button"
+            id="openButton"
+            onclick="openCase()"
+        >
+            🎁 ОТКРЫТЬ КЕЙС
+        </button>
+
+
+    </div>
+
+</div>
+
+
+<!-- PROFILE SCREEN -->
+
+<div
+    id="profileScreen"
+    class="profile-screen"
+>
+
+
+    <button
+        class="back"
+        onclick="closeProfile()"
+    >
+        ← Назад
+    </button>
+
+
+    <div class="profile-card">
+
+
+        <div
+            class="profile-avatar"
+            id="profileAvatar"
+        >
+            👤
+        </div>
+
+
+        <div
+            class="profile-name"
+            id="profileName"
+        >
+            Пользователь
+        </div>
+
+
+        <div
+            class="profile-username"
+            id="profileUsername"
+        >
+            @username
+        </div>
+
+
+    </div>
+
+
+    <!-- MAIN STATS -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🎁
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalCases"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Открыто кейсов
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalWon"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Всего выиграно
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🏆
+            </div>
+
+            <div
+                class="stat-value"
+                id="bestWin"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Лучший выигрыш
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div
+                class="stat-value"
+                id="currentBalance"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Баланс
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- CASE STATISTICS -->
+
+    <div class="stats-section">
+
+        <div class="stats-section-title">
+            📊 Статистика кейсов
+        </div>
+
+
+        <div class="case-stat">
+
+            <div class="case-stat-left">
+
+                <div class="case-stat-icon">
+                    🎁
+                </div>
+
+                <div class="case-stat-name">
+                    Free Case
+                </div>
+
+            </div>
+
+            <div
+                class="case-stat-count"
+                id="freeCount"
+            >
+                0 открытий
+            </div>
+
+        </div>
+
+
+        <div class="case-stat">
+
+            <div class="case-stat-left">
+
+                <div class="case-stat-icon">
+                    💜
+                </div>
+
+                <div class="case-stat-name">
+                    Purple Case
+                </div>
+
+            </div>
+
+            <div
+                class="case-stat-count"
+                id="purpleCount"
+            >
+                0 открытий
+            </div>
+
+        </div>
+
+
+        <div class="case-stat">
+
+            <div class="case-stat-left">
+
+                <div class="case-stat-icon">
+                    💎
+                </div>
+
+                <div class="case-stat-name">
+                    Diamond Case
+                </div>
+
+            </div>
+
+            <div
+                class="case-stat-count"
+                id="diamondCount"
+            >
+                0 открытий
+            </div>
+
+        </div>
+
+
+        <div class="case-stat">
+
+            <div class="case-stat-left">
+
+                <div class="case-stat-icon">
+                    👑
+                </div>
+
+                <div class="case-stat-name">
+                    Royal Case
+                </div>
+
+            </div>
+
+            <div
+                class="case-stat-count"
+                id="royalCount"
+            >
+                0 открытий
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- NAVIGATION -->
+
+<div class="nav">
+
+    <div class="nav-inner">
+
+
+        <button
+            class="active"
+            onclick="goHome()"
+        >
+
+            <div>🏠</div>
+
+            Главная
+
+        </button>
+
+
+        <button
+            onclick="goHome()"
+        >
+
+            <div>🎁</div>
+
+            Кейсы
+
+        </button>
+
+
+        <button>
+
+            <div>🎒</div>
+
+            Инвентарь
+
+        </button>
+
+
+        <button
+            onclick="openProfile()"
+        >
+
+            <div>👤</div>
+
+            Профиль
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* TELEGRAM */
+
+const tg =
+    window.Telegram.WebApp;
+
+tg.ready();
+
+tg.expand();
+
+
+/*
+   ДАННЫЕ ПОЛЬЗОВАТЕЛЯ TELEGRAM
+*/
+
+const telegramUser =
+    tg.initDataUnsafe &&
+    tg.initDataUnsafe.user
+        ? tg.initDataUnsafe.user
+        : null;
+
+
+/* BALANCE */
+
+let balance =
+    Number(
+        localStorage.getItem(
+            "dropix_balance"
+        )
+    ) || 0;
+
+
+/* HISTORY */
+
+let history =
+    JSON.parse(
+        localStorage.getItem(
+            "dropix_history"
+        ) || "[]"
+    );
+
+
+/* FREE CASE */
+
+const freeCaseCooldown =
+    24 * 60 * 60 * 1000;
+
+
+let freeCaseLastOpen =
+    Number(
+        localStorage.getItem(
+            "dropix_free_case"
+        )
+    ) || 0;
+
+
+let freeTimerInterval =
+    null;
+
+
+/* SELECTED CASE */
+
+let selectedCase = "";
+
+let selectedIcon = "";
+
+let minReward = 1;
+
+let maxReward = 5;
+
+let casePrice = 0;
+
+
+/* UPDATE BALANCE */
+
+function updateBalance() {
+
+    document
+        .getElementById(
+            "balance"
+        )
+        .innerText =
+        "⭐ " + balance;
+
+}
+
+
+/* SAVE DATA */
+
+function saveData() {
+
+    localStorage.setItem(
+        "dropix_balance",
+        balance
+    );
+
+    localStorage.setItem(
+        "dropix_history",
+        JSON.stringify(
+            history
+        )
+    );
+
+}
+
+
+/* RANDOM */
+
+function randomReward(
+    min,
+    max
+) {
+
+    return Math.floor(
+        Math.random() *
+        (
+            max -
+            min +
+            1
+        )
+    ) + min;
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(
+    message
+) {
+
+    if (
+        tg &&
+        tg.showAlert
+    ) {
+
+        tg.showAlert(
+            message
+        );
+
+    } else {
+
+        alert(message);
+
+    }
+
+}
+
+
+/* FREE AVAILABLE */
+
+function isFreeCaseAvailable() {
+
+    return (
+        Date.now() -
+        freeCaseLastOpen
+        >=
+        freeCaseCooldown
+    );
+
+}
+
+
+/* FORMAT TIME */
+
+function formatTime(
+    milliseconds
+) {
+
+    let seconds =
+        Math.max(
+            0,
+            Math.floor(
+                milliseconds / 1000
+            )
+        );
+
+
+    const hours =
+        Math.floor(
+            seconds / 3600
+        );
+
+
+    seconds %= 3600;
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    seconds %= 60;
+
+
+    return (
+
+        String(hours)
+            .padStart(2, "0")
+
+        +
+
+        ":" +
+
+        String(minutes)
+            .padStart(2, "0")
+
+        +
+
+        ":" +
+
+        String(seconds)
+            .padStart(2, "0")
+
+    );
+
+}
+
+
+/* FREE TIMER */
+
+function startFreeCaseTimer(
+    button
+) {
+
+    if (
+        freeTimerInterval
+    ) {
+
+        clearInterval(
+            freeTimerInterval
+        );
+
+    }
+
+
+    button.disabled =
+        true;
+
+
+    function updateTimer() {
+
+        const remaining =
+
+            freeCaseCooldown -
+
+            (
+                Date.now() -
+                freeCaseLastOpen
+            );
+
+
+        if (
+            remaining <= 0
+        ) {
+
+            clearInterval(
+                freeTimerInterval
+            );
+
+
+            button.disabled =
+                false;
+
+
+            button.innerText =
+                "🎁 БЕСПЛАТНО";
+
+
+            return;
+
+        }
+
+
+        button.innerText =
+            "⏳ " +
+            formatTime(
+                remaining
+            );
+
+    }
+
+
+    updateTimer();
+
+
+    freeTimerInterval =
+        setInterval(
+            updateTimer,
+            1000
+        );
+
+}
+
+
+/* FREE BUTTON */
+
+function updateFreeCaseButton() {
+
+    const button =
+        document.getElementById(
+            "freeCaseButton"
+        );
+
+
+    if (
+        !button
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        isFreeCaseAvailable()
+    ) {
+
+        button.disabled =
+            false;
+
+        button.innerText =
+            "🎁 БЕСПЛАТНО";
+
+    } else {
+
+        startFreeCaseTimer(
+            button
+        );
+
+    }
+
+}
+
+
+/* SELECT CASE */
+
+function selectCase(
+    name,
+    icon,
+    min,
+    max,
+    price
+) {
+
+    selectedCase =
+        name;
+
+    selectedIcon =
+        icon;
+
+    minReward =
+        min;
+
+    maxReward =
+        max;
+
+    casePrice =
+        price;
+
+
+    document
+        .getElementById(
+            "home"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "profileScreen"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "caseScreen"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "bigIcon"
+        )
+        .innerText =
+        icon;
+
+
+    document
+        .getElementById(
+            "caseTitle"
+        )
+        .innerText =
+        name;
+
+
+    const description =
+        document
+            .getElementById(
+                "caseDescription"
+            );
+
+
+    if (
+        price === 0
+    ) {
+
+        if (
+            isFreeCaseAvailable()
+        ) {
+
+            description.innerText =
+                "Бесплатно • награда: " +
+                min +
+                "–" +
+                max +
+                " ⭐";
+
+        } else {
+
+            description.innerText =
+                "⏳ Следующее открытие через " +
+                formatTime(
+                    freeCaseCooldown -
+                    (
+                        Date.now() -
+                        freeCaseLastOpen
+                    )
+                );
+
+        }
+
+    } else {
+
+        description.innerText =
+            "Цена: " +
+            price +
+            " ⭐ • награда: " +
+            min +
+            "–" +
+            max +
+            " ⭐";
+
+    }
+
+
+    document
+        .getElementById(
+            "roulette"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .style.display =
+        "none";
+
+
+    const button =
+        document
+            .getElementById(
+                "openButton"
+            );
+
+
+    button.style.display =
+        "block";
+
+
+    if (
+        price === 0
+    ) {
+
+        if (
+            isFreeCaseAvailable()
+        ) {
+
+            button.disabled =
+                false;
+
+            button.innerText =
+                "🎁 ОТКРЫТЬ БЕСПЛАТНО";
+
+        } else {
+
+            button.disabled =
+                true;
+
+            startFreeCaseTimer(
+                button
+            );
+
+        }
+
+    } else {
+
+        button.disabled =
+            false;
+
+        button.innerText =
+            "⭐ ОТКРЫТЬ ЗА " +
+            price +
+            " ⭐";
+
+    }
+
+}
+
+
+/* HOME */
+
+function goHome() {
+
+    document
+        .getElementById(
+            "caseScreen"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "profileScreen"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "home"
+        )
+        .style.display =
+        "block";
+
+
+    updateBalance();
+
+    updateFreeCaseButton();
+
+}
+
+
+/* OPEN CASE */
+
+function openCase() {
+
+
+    /* FREE LIMIT */
+
+    if (
+        casePrice === 0 &&
+        !isFreeCaseAvailable()
+    ) {
+
+        showMessage(
+            "⏳ Бесплатный кейс уже открыт сегодня!"
+        );
+
+        return;
+
+    }
+
+
+    /* BALANCE */
+
+    if (
+        casePrice > 0 &&
+        balance < casePrice
+    ) {
+
+        showMessage(
+
+            "❌ Недостаточно виртуальных ⭐\n\n" +
+
+            "Нужно: " +
+            casePrice +
+            " ⭐\n" +
+
+            "У тебя: " +
+            balance +
+            " ⭐"
+
+        );
+
+        return;
+
+    }
+
+
+    /* PAY */
+
+    if (
+        casePrice > 0
+    ) {
+
+        balance -=
+            casePrice;
+
+        saveData();
+
+        updateBalance();
+
+    }
+
+
+    const roulette =
+        document.getElementById(
+            "roulette"
+        );
+
+
+    const line =
+        document.getElementById(
+            "rouletteLine"
+        );
+
+
+    const button =
+        document.getElementById(
+            "openButton"
+        );
+
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    button.style.display =
+        "none";
+
+
+    result.style.display =
+        "none";
+
+
+    roulette.style.display =
+        "block";
+
+
+    line.innerHTML =
+        "";
+
+
+    const reward =
+        randomReward(
+            minReward,
+            maxReward
+        );
+
+
+    const totalItems =
+        35;
+
+
+    const winningIndex =
+        28;
+
+
+    for (
+        let i = 0;
+        i < totalItems;
+        i++
+    ) {
+
+        let value;
+
+
+        if (
+            i === winningIndex
+        ) {
+
+            value =
+                reward;
+
+        } else {
+
+            value =
+                randomReward(
+                    minReward,
+                    maxReward
+                );
+
+        }
+
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.className =
+            "item";
+
+
+        item.innerHTML =
+
+            '<div class="item-icon">' +
+            '⭐' +
+            '</div>' +
+
+            '<div class="item-value">' +
+            value +
+            ' ⭐' +
+            '</div>';
+
+
+        line.appendChild(
+            item
+        );
+
+    }
+
+
+    line.style.transform =
+        "translateX(0px)";
+
+
+    setTimeout(
+        function() {
+
+
+            const itemWidth =
+                117;
+
+
+            const position =
+
+                -(winningIndex *
+                    itemWidth)
+
+                +
+
+                (
+                    window.innerWidth /
+                    2
+                )
+
+                -
+
+                (
+                    itemWidth /
+                    2
+                );
+
+
+            line.style.transform =
+                "translateX(" +
+                position +
+                "px)";
+
+
+        },
+        100
+    );
+
+
+    setTimeout(
+        function() {
+
+
+            /* FREE CASE TIME */
+
+            if (
+                casePrice === 0
+            ) {
+
+                freeCaseLastOpen =
+                    Date.now();
+
+
+                localStorage.setItem(
+                    "dropix_free_case",
+                    freeCaseLastOpen
+                );
+
+            }
+
+
+            /* REWARD */
+
+            balance +=
+                reward;
+
+
+            /* HISTORY */
+
+            history.unshift({
+
+                case:
+                    selectedCase,
+
+                reward:
+                    reward,
+
+                time:
+                    new Date()
+                        .toLocaleTimeString()
+
+            });
+
+
+            history =
+                history.slice(
+                    0,
+                    50
+                );
+
+
+            saveData();
+
+            updateBalance();
+
+            showHistory();
+
+
+            /* RESULT */
+
+            document
+                .getElementById(
+                    "resultValue"
+                )
+                .innerText =
+                "+" +
+                reward +
+                " ⭐";
+
+
+            result.style.display =
+                "block";
+
+
+            /* BUTTON */
+
+            if (
+                casePrice === 0
+            ) {
+
+                button.disabled =
+                    true;
+
+                startFreeCaseTimer(
+                    button
+                );
+
+            } else {
+
+                button.disabled =
+                    false;
+
+                button.innerText =
+                    "⭐ ОТКРЫТЬ ЕЩЁ";
+
+            }
+
+
+            /* HAPTIC */
+
+            if (
+                tg &&
+                tg.HapticFeedback
+            ) {
+
+                tg.HapticFeedback
+                    .notificationOccurred(
+                        "success"
+                    );
+
+            }
+
+
+        },
+        3800
+    );
+
+}
+
+
+/* HISTORY */
+
+function showHistory() {
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    if (
+        history.length === 0
+    ) {
+
+        list.innerHTML =
+            '<div style="color:#777;font-size:13px;">' +
+            'Пока открытий нет' +
+            '</div>';
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        "";
+
+
+    history.forEach(
+        function(item) {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "history-item";
+
+
+            element.innerHTML =
+
+                "<span>" +
+                item.case +
+                "</span>" +
+
+                "<span>+" +
+                item.reward +
+                " ⭐</span>";
+
+
+            list.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+/* PROFILE DATA */
+
+function setupProfile() {
+
+
+    const avatar =
+        document.getElementById(
+            "profileAvatar"
+        );
+
+
+    const headerAvatar =
+        document.getElementById(
+            "headerAvatar"
+        );
+
+
+    const name =
+        document.getElementById(
+            "profileName"
+        );
+
+
+    const username =
+        document.getElementById(
+            "profileUsername"
+        );
+
+
+    /*
+       Если Telegram передал
+       пользователя
+    */
+
+    if (
+        telegramUser
+    ) {
+
+
+        const firstName =
+            telegramUser.first_name ||
+            "";
+
+
+        const lastName =
+            telegramUser.last_name ||
+            "";
+
+
+        const fullName =
+            (
+                firstName +
+                " " +
+                lastName
+            ).trim();
+
+
+        name.innerText =
+            fullName ||
+            "Пользователь";
+
+
+        if (
+            telegramUser.username
+        ) {
+
+            username.innerText =
+                "@" +
+                telegramUser.username;
+
+        } else {
+
+            username.innerText =
+                "Username не установлен";
+
+        }
+
+
+        /*
+           AVATAR
+        */
+
+        if (
+            telegramUser.photo_url
+        ) {
+
+            avatar.innerHTML =
+                '<img src="' +
+                telegramUser.photo_url +
+                '" alt="avatar">';
+
+
+            headerAvatar.innerHTML =
+                '<img src="' +
+                telegramUser.photo_url +
+                '" alt="avatar">';
+
+        } else {
+
+            /*
+               Если фото нет,
+               показываем первую
+               букву имени
+            */
+
+            const letter =
+                (
+                    firstName ||
+                    "U"
+                )
+                .charAt(0)
+                .toUpperCase();
+
+
+            avatar.innerText =
+                letter;
+
+
+            headerAvatar.innerText =
+                letter;
+
+        }
+
+    } else {
+
+
+        /*
+           Если приложение
+           открыто не внутри Telegram
+        */
+
+        name.innerText =
+            "Пользователь";
+
+
+        username.innerText =
+            "Открой приложение внутри Telegram";
+
+
+        avatar.innerText =
+            "👤";
+
+
+        headerAvatar.innerText =
+            "👤";
+
+    }
+
+}
+
+
+/* PROFILE STATISTICS */
+
+function updateProfileStats() {
+
+
+    const totalCases =
+        history.length;
+
+
+    let totalWon =
+        0;
+
+
+    let bestWin =
+        0;
+
+
+    let freeCount =
+        0;
+
+
+    let purpleCount =
+        0;
+
+
+    let diamondCount =
+        0;
+
+
+    let royalCount =
+        0;
+
+
+    history.forEach(
+        function(item) {
+
+
+            totalWon +=
+                Number(
+                    item.reward
+                ) || 0;
+
+
+            bestWin =
+                Math.max(
+                    bestWin,
+                    Number(
+                        item.reward
+                    ) || 0
+                );
+
+
+            if (
+                item.case ===
+                "Free Case"
+            ) {
+
+                freeCount++;
+
+            }
+
+
+            if (
+                item.case ===
+                "Purple Case"
+            ) {
+
+                purpleCount++;
+
+            }
+
+
+            if (
+                item.case ===
+                "Diamond Case"
+            ) {
+
+                diamondCount++;
+
+            }
+
+
+            if (
+                item.case ===
+                "Royal Case"
+            ) {
+
+                royalCount++;
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "totalCases"
+        )
+        .innerText =
+        totalCases;
+
+
+    document
+        .getElementById(
+            "totalWon"
+        )
+        .innerText =
+        totalWon +
+        " ⭐";
+
+
+    document
+        .getElementById(
+            "bestWin"
+        )
+        .innerText =
+        bestWin +
+        " ⭐";
+
+
+    document
+        .getElementById(
+            "currentBalance"
+        )
+        .innerText =
+        balance +
+        " ⭐";
+
+
+    document
+        .getElementById(
+            "freeCount"
+        )
+        .innerText =
+        freeCount +
+        " открытий";
+
+
+    document
+        .getElementById(
+            "purpleCount"
+        )
+        .innerText =
+        purpleCount +
+        " открытий";
+
+
+    document
+        .getElementById(
+            "diamondCount"
+        )
+        .innerText =
+        diamondCount +
+        " открытий";
+
+
+    document
+        .getElementById(
+            "royalCount"
+        )
+        .innerText =
+        royalCount +
+        " открытий";
+
+}
+
+
+/* OPEN PROFILE */
+
+function openProfile() {
+
+
+    document
+        .getElementById(
+            "home"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "caseScreen"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "profileScreen"
+        )
+        .style.display =
+        "block";
+
+
+    setupProfile();
+
+    updateProfileStats();
+
+}
+
+
+/* CLOSE PROFILE */
+
+function closeProfile() {
+
+    goHome();
+
+}
+
+
+/* START */
+
+updateBalance();
+
+showHistory();
+
+updateFreeCaseButton();
+
+setupProfile();
+
+</script>
+
+</body>
+
+</html>
